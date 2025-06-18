@@ -1,0 +1,65 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "locust-dashboard",
+    "title": "Locust Performance Testing Dashboard",
+    "timezone": "browser",
+    "schemaVersion": 30,
+    "version": 1,
+    "refresh": "5s",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Requests Per Second",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(locust_request_stats_num_requests_total[1m])",
+            "legendFormat": "{{endpoint}}",
+            "refId": "A"
+          }
+        ],
+        "xaxis": { "mode": "time" },
+        "yaxes": [{ "format": "short" }, { "format": "short" }],
+        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+      },
+      {
+        "type": "graph",
+        "title": "Failures Per Second",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(locust_request_stats_num_failures_total[1m])",
+            "legendFormat": "{{endpoint}}",
+            "refId": "B"
+          }
+        ],
+        "xaxis": { "mode": "time" },
+        "yaxes": [{ "format": "short" }, { "format": "short" }],
+        "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+      },
+      {
+        "type": "graph",
+        "title": "Average Response Time (ms)",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(locust_request_stats_total_response_time[1m]) / rate(locust_request_stats_num_requests_total[1m])",
+            "legendFormat": "{{endpoint}}",
+            "refId": "C"
+          }
+        ],
+        "xaxis": { "mode": "time" },
+        "yaxes": [{ "format": "ms" }, { "format": "short" }],
+        "gridPos": { "x": 0, "y": 8, "w": 24, "h": 8 }
+      }
+    ],
+    "templating": { "list": [] },
+    "annotations": { "list": [] },
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    }
+  },
+  "overwrite": true
+}

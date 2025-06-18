@@ -1,4 +1,10 @@
 #!/bin/bash
-# Run Locust in headless mode
+# Run Locust headless test
+# Usage: ./run_headless.sh load/load_test.py
 
-locust -f locustfile.py --headless -u 25 -r 5 -t 1m --host=https://reqres.in --csv=reports/test_run
+if [ -z "$1" ]; then
+  echo "Usage: ./run_headless.sh <test_file>"
+  exit 1
+fi
+
+locust -f "$1" --headless -u 500 -r 50 -t 1m --host=https://fakerestapi.azurewebsites.net --csv=reports/summary_stats
