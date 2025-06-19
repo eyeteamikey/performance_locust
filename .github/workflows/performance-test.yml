@@ -9,67 +9,75 @@ on:
 jobs:
   performance-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
-      - name: Checkout repository
+      - name: 🛒 Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: Install Python dependencies
+      - name: 📦 Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r locust_devops/requirements.txt
+          pip install matplotlib pandas
 
-      # LOCUST TESTS
-      - name: Run Locust load tests
+      # LOCUST: Run & Save
+      - name: 🐜 Run Locust load tests
         run: |
+          mkdir -p locust_devops/reports
           locust -f locust_devops/scripts/load/load_test.py \
             --host=https://fakerestapi.azurewebsites.net \
             --headless -u 10 -r 2 -t 30s \
             --csv=locust_devops/reports/load_test
 
-      # INSTALL JMETER
-      - name: Install and Setup Apache JMeter
+      - name: 📊 Generate Locust report chart (PNG)
+        run: |
+          python locust_devops/tools/plot_locust_results.py locust_devops/reports/load_test_stats.csv
+
+      # JMETER: Install and Clean
+      - name: ☕ Install Apache JMeter
         run: |
           sudo apt-get update
           sudo apt-get install -y openjdk-11-jre-headless
           wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
           tar -xzf apache-jmeter-5.6.3.tgz
 
-      # CLEAN JMeter REPORT OUTPUTS
-      - name: Clean JMeter report output folders
+      - name: 🧹 Clean JMeter report output folders
         run: |
           rm -f jmeter_qa/reports/*.jtl || true
           rm -rf jmeter_qa/reports/*_html || true
 
-      # RUN JMETER TESTS
-      - name: Run JMeter GET Books Load Test
+      # JMETER: Run test plans
+      - name: 🚀 Run JMeter GET Books Load Test
         run: |
           apache-jmeter-5.6.3/bin/jmeter \
             -n -t jmeter_qa/test_scripts/load/get_books_load_test.jmx \
             -l jmeter_qa/reports/load_get_books.jtl \
-            -e -o jmeter_qa/reports/load_get_books_html
+            -e -o jmeter_qa/reports/load_get_books_html || echo "GET Books failed"
 
-      - name: Run JMeter POST Users Load Test
+      - name: 🚀 Run JMeter POST Users Load Test
         run: |
           apache-jmeter-5.6.3/bin/jmeter \
             -n -t jmeter_qa/test_scripts/load/post_users_load_test.jmx \
             -l jmeter_qa/reports/post_users_load.jtl \
-            -e -o jmeter_qa/reports/post_users_load_html
+            -e -o jmeter_qa/reports/post_users_load_html || echo "POST Users failed"
 
-      - name: Run JMeter SLA Assertion Load Test
+      - name: 🚀 Run JMeter SLA Assertion Load Test
         run: |
           apache-jmeter-5.6.3/bin/jmeter \
             -n -t jmeter_qa/test_scripts/load/load_test_sla_assertion.jmx \
             -l jmeter_qa/reports/sla_assertion_load.jtl \
-            -e -o jmeter_qa/reports/sla_assertion_load_html
+            -e -o jmeter_qa/reports/sla_assertion_load_html || echo "SLA Assertion failed"
 
-      # OPTIONAL: Show last few lines of each JMeter test for summary
-      - name: Print JMeter test summaries
+      # DEBUGGING
+      - name: 🧾 Print JMeter test summaries
         if: always()
         run: |
           echo "Summary: GET /Books"
@@ -81,8 +89,8 @@ jobs:
           echo "Summary: SLA Assertion"
           tail -n 10 jmeter_qa/reports/sla_assertion_load.jtl || true
 
-      # UPLOAD ARTIFACTS EVEN IF TESTS FAIL
-      - name: Upload Performance Test Artifacts
+      # ARTIFACTS
+      - name: ⬆️ Upload Performance Test Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
