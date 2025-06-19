@@ -1,0 +1,67 @@
+name: Run Locust and JMeter Performance Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  performance-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r locust_devops/requirements.txt
+
+      ### Run Locust Load Tests
+      - name: Run Locust load tests
+        run: |
+          locust -f locust_devops/scripts/load/load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=locust_devops/reports/load_test
+
+      ### Install and Run Apache JMeter Test
+      - name: Run JMeter load tests
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-11-jre-headless
+          wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
+          tar -xzf apache-jmeter-5.6.3.tgz
+
+          # Run 1: GET /Books
+          apache-jmeter-5.6.3/bin/jmeter \
+            -n -t jmeter_qa/test_scripts/load/get_books_load_test.jmx \
+            -l jmeter_qa/reports/load_get_books.jtl \
+            -e -o jmeter_qa/reports/load_get_books_html
+
+          # Run 2: POST /Users
+          apache-jmeter-5.6.3/bin/jmeter \
+            -n -t jmeter_qa/test_scripts/load/post_users_load_test.jmx \
+            -l jmeter_qa/reports/post_users_load.jtl \
+            -e -o jmeter_qa/reports/post_users_load_html
+
+          # Run 3: SLA Assertion test
+          apache-jmeter-5.6.3/bin/jmeter \
+            -n -t jmeter_qa/test_scripts/load/load_test_sla_assertion.jmx \
+            -l jmeter_qa/reports/sla_assertion_load.jtl \
+            -e -o jmeter_qa/reports/sla_assertion_load_html
+
+      ### Upload Both Locust & JMeter Artifacts
+      - name: Upload Performance Test Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-reports
+          path: |
+            locust_devops/reports/
+            jmeter_qa/reports/load_get_books_html/
+            jmeter_qa/reports/post_users_load_html/
+            jmeter_qa/reports/sla_assertion_load_html/
