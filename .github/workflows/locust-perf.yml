@@ -26,9 +26,9 @@ jobs:
 
       - name: Run multiple Locust test scripts
         run: |
-          locust -f locust_devops/scripts/load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=reports/load_test
-          locust -f locust_devops/scripts/multi_task_load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=reports/multi_task
-          locust -f locust_devops/scripts/post_user_load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=reports/post_user
+          locust -f locust_devops/scripts/load/load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=reports/load_test
+          locust -f locust_devops/scripts/load/multi_task_load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=reports/multi_task
+          locust -f locust_devops/scripts/load/post_user_load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=reports/post_user
 
       - name: Generate PNG charts from Locust results
         run: |
