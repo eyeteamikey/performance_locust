@@ -24,10 +24,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Locust (headless)
+      - name: Run multiple Locust test scripts
         run: |
-          locust -f scripts/load/load_test.py --host=https://fakerestapi.azurewebsites.net \
-            --headless -u 10 -r 2 -t 30s --csv=reports/test_output
+          locust -f scripts/load/load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=reports/load_test
+          locust -f scripts/load/multi_task_load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=reports/multi_task
+          locust -f scripts/load/post_user_load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=reports/post_user
+
+      - name: Generate PNG charts from Locust results
+        run: |
+          python tools/plot_locust_results.py
 
       - name: Upload report artifacts
         uses: actions/upload-artifact@v4
