@@ -18,7 +18,7 @@ class CSVUserLoadTest(HttpUser):
 
     def on_start(self):
         """Load CSV data into memory once at user start."""
-        with open("data/test_users.csv", newline='') as csvfile:
+        with open("locust_devops/data/test_users.csv", newline='') as csvfile:
             self.user_data = list(csv.DictReader(csvfile))
 
     @task
