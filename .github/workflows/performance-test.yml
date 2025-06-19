@@ -37,10 +37,17 @@ jobs:
           wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
           tar -xzf apache-jmeter-5.6.3.tgz
 
-          # Clean previous report folders
+
+          # Clean previous JTL and report folders
+          rm -f jmeter_qa/reports/load_get_books.jtl
           rm -rf jmeter_qa/reports/load_get_books_html
+
+          rm -f jmeter_qa/reports/post_users_load.jtl
           rm -rf jmeter_qa/reports/post_users_load_html
+
+          rm -f jmeter_qa/reports/sla_assertion_load.jtl
           rm -rf jmeter_qa/reports/sla_assertion_load_html
+
 
           # Run 1: GET /Books
           apache-jmeter-5.6.3/bin/jmeter \
