@@ -1,7 +1,7 @@
 """
 CSV-Based Load Test
 -------------------
-Simulates POSTing user data loaded from a CSV file to test data-driven load patterns.
+Simulates POSTing user data (creating new users) loaded from a CSV file to test data-driven load patterns.
 
 Purpose:
 - Replays realistic, external user data
