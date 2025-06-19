@@ -1,24 +1,24 @@
-2025-06-19 12:23:57,109 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
-2025-06-19 12:23:57,142 INFO o.a.j.JMeter: Loading user properties from: C:\Program Files\apache-jmeter-5.6.3\bin\user.properties
-2025-06-19 12:23:57,143 INFO o.a.j.JMeter: Loading system properties from: C:\Program Files\apache-jmeter-5.6.3\bin\system.properties
-2025-06-19 12:23:57,158 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
-2025-06-19 12:23:57,159 INFO o.a.j.JMeter: Version 5.6.3
-2025-06-19 12:23:57,159 INFO o.a.j.JMeter: java.version=20
-2025-06-19 12:23:57,159 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
-2025-06-19 12:23:57,159 INFO o.a.j.JMeter: os.name=Windows 10
-2025-06-19 12:23:57,159 INFO o.a.j.JMeter: os.arch=amd64
-2025-06-19 12:23:57,159 INFO o.a.j.JMeter: os.version=10.0
-2025-06-19 12:23:57,159 INFO o.a.j.JMeter: file.encoding=UTF-8
-2025-06-19 12:23:57,159 INFO o.a.j.JMeter: java.awt.headless=true
-2025-06-19 12:23:57,159 INFO o.a.j.JMeter: Max memory     =1073741824
-2025-06-19 12:23:57,159 INFO o.a.j.JMeter: Available Processors =12
-2025-06-19 12:23:57,178 INFO o.a.j.JMeter: Default Locale=English (EN)
-2025-06-19 12:23:57,178 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
-2025-06-19 12:23:57,178 INFO o.a.j.JMeter: JMeterHome=C:\Program Files\apache-jmeter-5.6.3
-2025-06-19 12:23:57,178 INFO o.a.j.JMeter: user.dir  =C:\Users\Michael\OneDrive\Documents\Python\performance
-2025-06-19 12:23:57,179 INFO o.a.j.JMeter: PWD       =C:\Users\Michael\OneDrive\Documents\Python\performance
-2025-06-19 12:23:57,180 INFO o.a.j.JMeter: IP: 192.168.1.80 Name: DESKTOP-L8L9GOT FullName: host.docker.internal
-2025-06-19 12:23:57,210 ERROR o.a.j.JMeter: An error occurred: 
+2025-06-19 12:25:21,360 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2025-06-19 12:25:21,386 INFO o.a.j.JMeter: Loading user properties from: C:\Program Files\apache-jmeter-5.6.3\bin\user.properties
+2025-06-19 12:25:21,387 INFO o.a.j.JMeter: Loading system properties from: C:\Program Files\apache-jmeter-5.6.3\bin\system.properties
+2025-06-19 12:25:21,395 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2025-06-19 12:25:21,395 INFO o.a.j.JMeter: Version 5.6.3
+2025-06-19 12:25:21,395 INFO o.a.j.JMeter: java.version=20
+2025-06-19 12:25:21,395 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2025-06-19 12:25:21,395 INFO o.a.j.JMeter: os.name=Windows 10
+2025-06-19 12:25:21,395 INFO o.a.j.JMeter: os.arch=amd64
+2025-06-19 12:25:21,396 INFO o.a.j.JMeter: os.version=10.0
+2025-06-19 12:25:21,396 INFO o.a.j.JMeter: file.encoding=UTF-8
+2025-06-19 12:25:21,396 INFO o.a.j.JMeter: java.awt.headless=true
+2025-06-19 12:25:21,396 INFO o.a.j.JMeter: Max memory     =1073741824
+2025-06-19 12:25:21,396 INFO o.a.j.JMeter: Available Processors =12
+2025-06-19 12:25:21,409 INFO o.a.j.JMeter: Default Locale=English (EN)
+2025-06-19 12:25:21,409 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2025-06-19 12:25:21,410 INFO o.a.j.JMeter: JMeterHome=C:\Program Files\apache-jmeter-5.6.3
+2025-06-19 12:25:21,410 INFO o.a.j.JMeter: user.dir  =C:\Users\Michael\OneDrive\Documents\Python\performance
+2025-06-19 12:25:21,410 INFO o.a.j.JMeter: PWD       =C:\Users\Michael\OneDrive\Documents\Python\performance
+2025-06-19 12:25:21,411 INFO o.a.j.JMeter: IP: 192.168.1.80 Name: DESKTOP-L8L9GOT FullName: host.docker.internal
+2025-06-19 12:25:21,446 ERROR o.a.j.JMeter: An error occurred: 
 java.lang.IllegalArgumentException: Cannot write to 'C:\Users\Michael\OneDrive\Documents\Python\performance\jmeter_qa\reports\load_get_books_html' as folder is not empty
 	at org.apache.jorphan.util.JOrphanUtils.canSafelyWriteToFolder(JOrphanUtils.java:664) ~[jorphan.jar:5.6.3]
 	at org.apache.jorphan.util.JOrphanUtils.canSafelyWriteToFolder(JOrphanUtils.java:620) ~[jorphan.jar:5.6.3]
