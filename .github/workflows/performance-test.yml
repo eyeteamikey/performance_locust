@@ -24,51 +24,66 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r locust_devops/requirements.txt
 
-      ### Run Locust Load Tests
+      # LOCUST TESTS
       - name: Run Locust load tests
         run: |
-          locust -f locust_devops/scripts/load/load_test.py --host=https://fakerestapi.azurewebsites.net --headless -u 10 -r 2 -t 30s --csv=locust_devops/reports/load_test
+          locust -f locust_devops/scripts/load/load_test.py \
+            --host=https://fakerestapi.azurewebsites.net \
+            --headless -u 10 -r 2 -t 30s \
+            --csv=locust_devops/reports/load_test
 
-      ### Install and Run Apache JMeter Test
-      - name: Run JMeter load tests
+      # INSTALL JMETER
+      - name: Install and Setup Apache JMeter
         run: |
           sudo apt-get update
           sudo apt-get install -y openjdk-11-jre-headless
           wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
           tar -xzf apache-jmeter-5.6.3.tgz
 
+      # CLEAN JMeter REPORT OUTPUTS
+      - name: Clean JMeter report output folders
+        run: |
+          rm -f jmeter_qa/reports/*.jtl || true
+          rm -rf jmeter_qa/reports/*_html || true
 
-          # Clean previous JTL and report folders
-          rm -f jmeter_qa/reports/load_get_books.jtl
-          rm -rf jmeter_qa/reports/load_get_books_html
-
-          rm -f jmeter_qa/reports/post_users_load.jtl
-          rm -rf jmeter_qa/reports/post_users_load_html
-
-          rm -f jmeter_qa/reports/sla_assertion_load.jtl
-          rm -rf jmeter_qa/reports/sla_assertion_load_html
-
-
-          # Run 1: GET /Books
+      # RUN JMETER TESTS
+      - name: Run JMeter GET Books Load Test
+        run: |
           apache-jmeter-5.6.3/bin/jmeter \
             -n -t jmeter_qa/test_scripts/load/get_books_load_test.jmx \
             -l jmeter_qa/reports/load_get_books.jtl \
             -e -o jmeter_qa/reports/load_get_books_html
 
-          # Run 2: POST /Users
+      - name: Run JMeter POST Users Load Test
+        run: |
           apache-jmeter-5.6.3/bin/jmeter \
             -n -t jmeter_qa/test_scripts/load/post_users_load_test.jmx \
             -l jmeter_qa/reports/post_users_load.jtl \
             -e -o jmeter_qa/reports/post_users_load_html
 
-          # Run 3: SLA Assertion test
+      - name: Run JMeter SLA Assertion Load Test
+        run: |
           apache-jmeter-5.6.3/bin/jmeter \
             -n -t jmeter_qa/test_scripts/load/load_test_sla_assertion.jmx \
             -l jmeter_qa/reports/sla_assertion_load.jtl \
             -e -o jmeter_qa/reports/sla_assertion_load_html
 
-      ### Upload Both Locust & JMeter Artifacts
+      # OPTIONAL: Show last few lines of each JMeter test for summary
+      - name: Print JMeter test summaries
+        if: always()
+        run: |
+          echo "Summary: GET /Books"
+          tail -n 10 jmeter_qa/reports/load_get_books.jtl || true
+
+          echo "Summary: POST /Users"
+          tail -n 10 jmeter_qa/reports/post_users_load.jtl || true
+
+          echo "Summary: SLA Assertion"
+          tail -n 10 jmeter_qa/reports/sla_assertion_load.jtl || true
+
+      # UPLOAD ARTIFACTS EVEN IF TESTS FAIL
       - name: Upload Performance Test Artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: performance-reports
