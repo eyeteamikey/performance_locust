@@ -4,14 +4,14 @@ This project is a modular and extensible performance testing framework built wit
 
 It supports:
 
-- ✅ Load Testing
-- ✅ Stress Testing
-- ✅ Spike Testing
-- ✅ Endurance Testing
-- ✅ Scalability & Volume Testing
-- ✅ SLA Monitoring
-- ✅ CSV-based Test Data
-- ✅ Grafana Monitoring Integration
+- ✅ Load Testing  
+- ✅ Stress Testing  
+- ✅ Spike Testing  
+- ✅ Endurance Testing  
+- ✅ Scalability & Volume Testing  
+- ✅ SLA Monitoring  
+- ✅ CSV-based Test Data  
+- ✅ Grafana Monitoring Integration  
 
 ---
 
@@ -25,6 +25,7 @@ locust_fakerestapi/
 ├── reports/                   # Locust-generated CSVs
 ├── scalability/               # Scalability test logic
 ├── scripts/                   # Shell runners (optional)
+├── shape/                     # Custom load profiles (e.g., step shape)
 ├── spike/                     # Spike testing scripts
 ├── stress/                    # Stress testing logic
 ├── tools/                     # Analytics & Grafana dashboard
@@ -45,6 +46,9 @@ locust_fakerestapi/
 - `load_test.py`: Basic GET `/Books`
 - `multi_task_load_test.py`: GET `/Books`, `/Users`, `/Authors`
 - `post_user_load_test.py`: POST `/Users` with randomized data
+- `load_test_csv_users.py`: Loads users from CSV and posts them
+- `load_test_user_journey.py`: Create → Read → Delete simulation
+- `load_test_sla_checker.py`: Flags responses > 500ms
 
 ### Endurance Tests
 
@@ -52,11 +56,34 @@ locust_fakerestapi/
 - `endurance_post_users.py`: POST `/Users` under continuous write load
 - `endurance_mixed.py`: GET `/Books`, `/Users`, `/Authors` evenly
 
-### Advanced Load
+### Scalability Tests
 
-- `load_test_csv_users.py`: Loads users from CSV and posts them
-- `load_test_user_journey.py`: Create → Read → Delete simulation
-- `load_test_sla_checker.py`: Flags responses > 500ms
+- `scalability_horizontal.py`: Simulate concurrency by increasing users
+- `scalability_vertical.py`: Simulate complex requests per user
+- `scalability_staggered_scaling.py`: Simulate both user growth and payload complexity
+- `scalability_api_growth.py`: Gradually expand endpoints hit during the test
+- `scalability_payload_size_curve.py`: Increase payload size each request
+
+### Spike Tests
+
+- `spike_test_books.py`: Sudden burst of GET `/Books`
+- `spike_post_users.py`: Burst of POST `/Users`
+- `spike_user_journey.py`: Full user journey during traffic spike
+- `spike_random_reads.py`: Random GETs across endpoints under surge
+
+### Stress Tests
+
+- `stress_get_books.py`: Hammering GET `/Books` without pause
+- `stress_large_post_users.py`: Flood of huge `POST /Users`
+- `stress_mixed_endpoints.py`: Multiple endpoints hit under pressure
+- `stress_post_delete_loop.py`: Looping `POST` and `DELETE /Users`
+
+### Volume Tests
+
+- `volume_large_get_books.py`: Test large dataset via `GET /Books`
+- `volume_post_big_field.py`: Large record fields sent to `POST /Users`
+- `volume_csv_simulation.py`: Simulate large CSV import of 200 users
+- `volume_high_read_load.py`: Fast GETs across multiple endpoints
 
 ---
 
@@ -69,10 +96,7 @@ locust -f load/load_test.py --host=https://fakerestapi.azurewebsites.net
 ### Headless Example
 
 ```bash
-locust -f endurance/endurance_test_books.py \
-  --host=https://fakerestapi.azurewebsites.net \
-  --headless -u 50 -r 2 -t 1h \
-  --csv=reports/summary_stats
+locust -f endurance/endurance_test_books.py   --host=https://fakerestapi.azurewebsites.net   --headless -u 50 -r 2 -t 1h   --csv=reports/summary_stats
 ```
 
 ---
@@ -87,9 +111,32 @@ python tools/analyze_locust_csv.py reports/summary_stats_stats.csv
 
 ### With Grafana
 
-1. Start Prometheus + Grafana stack
-2. Import `tools/locust_grafana_dashboard.json`
-3. Set Prometheus as the data source
+1. Start Prometheus + Grafana stack  
+2. Import `tools/locust_grafana_dashboard.json`  
+3. Set Prometheus as the data source  
+
+---
+
+## 🧠 Key Concepts
+
+- **Concurrency**: Users or requests handled at the same time  
+- **Throughput**: Requests per second processed successfully  
+- **Memory Leaks**: Gradual RAM usage increase not released  
+- **CPU Degradation**: CPU load increases or slows down over time  
+- **Horizontal Scaling**: Add more machines  
+- **Vertical Scaling**: Add more CPU/RAM to one machine  
+
+---
+
+## 🧠 Interview Summary
+
+Be ready to discuss:
+
+- Each performance test type and when to use it  
+- Locust’s core design: users, tasks, wait times  
+- Test structure, metrics monitored, CSV inputs  
+- Headless and UI modes, SLAs, scaling patterns  
+- Tools used: Grafana, Python CLI, CSV analysis  
 
 ---
 
@@ -100,22 +147,6 @@ pip install -r requirements.txt
 ```
 
 > Requires Python 3.7+
-
----
-
-## 🧠 Notes
-
-- Test data lives in `data/`
-- All tests use `catch_response=True` for custom pass/fail tracking
-- Modular design = easier CI/CD integration
-
----
-
-## 📌 To Do
-
-- [ ] Add chaos testing module
-- [ ] Integrate with Docker Compose
-- [ ] Add test result visualizer (e.g. HTML dashboard)
 
 ---
 
