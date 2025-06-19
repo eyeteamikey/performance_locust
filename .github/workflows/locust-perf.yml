@@ -26,7 +26,7 @@ jobs:
 
       - name: Run Locust (headless)
         run: |
-          locust -f load/load_test.py --host=https://fakerestapi.azurewebsites.net \
+          locust -f scripts/load/load_test.py --host=https://fakerestapi.azurewebsites.net \
             --headless -u 10 -r 2 -t 30s --csv=reports/test_output
 
       - name: Upload report artifacts
